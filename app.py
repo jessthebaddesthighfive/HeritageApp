@@ -174,4 +174,6 @@ for country in countries_to_plot:
         ax.plot(x_future, y_future, linestyle='--', color=colors.get(country))
     else:
         ax.plot(x_plot, y_plot, linestyle='-', color=colors.get(country))
-    eq_terms =
+  eq_terms = [f'({c:.4e})*t^{len(coeffs)-1-i}' for i, c in enumerate(coeffs)]
+equation = ' + '.join(eq_terms)
+analysis_text.append(f"Equation for {country} (t = years since {int(x.min())}): {equation}")
