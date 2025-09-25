@@ -58,6 +58,7 @@ extrapolate_years = st.sidebar.number_input("Years to extrapolate (if enabled)",
 printer_friendly = st.sidebar.checkbox("Show printer-friendly results area", value=False)
 
 # --- Helper Functions ---
+
 def fetch_wb(country_code, indicator_code, years_back=70):
     current_year = datetime.now().year
     start_year = current_year - years_back + 1
@@ -114,7 +115,12 @@ for country, df in all_data.items():
     merged = base_table.merge(df[["year", "value_for_model"]], on="year", how="left")
     base_table[country] = merged["value_for_model"]
 
-edited = st.experimental_data_editor(base_table, num_rows="dynamic")
+# --- Editable table using latest Streamlit API ---
+try:
+    edited = st.experimental_data_editor(base_table, num_rows="dynamic")
+except AttributeError:
+    st.warning("Your Streamlit version is too old for `experimental_data_editor`. Displaying read-only table instead.")
+    edited = st.dataframe(base_table)
 
 # --- Save edited table back ---
 model_data = {}
