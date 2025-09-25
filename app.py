@@ -10,7 +10,7 @@ import base64
 st.set_page_config(layout="wide", page_title="Latin Countries Regression Explorer")
 
 st.title("Regression & Function Analysis — Argentina, Chile, Mexico (70-year World Bank data)")
-st.markdown("""
+st.markdown("**Created by Amarachi Onwo**")
 This app fetches historical data (World Bank) for **Argentina (ARG)**, **Chile (CHL)**, and **Mexico (MEX)**,
 fits a polynomial regression (degree ≥ 3) and performs function analysis (extrema, monotonicity, fastest change, extrapolation, etc.).
 - Use the controls in the left sidebar to pick category, years and countries.
