@@ -25,11 +25,10 @@ Use the controls in the left sidebar to pick:
 
 The raw data is shown in an editable table. The regression model is plotted as a scatter plot with the fitted curve.
 Extrapolated future data can be shown with a dashed line. You can also generate printer-friendly reports.
+st.markdown("""
+**Notes:** Data is loaded from the World Bank API. Some indicators have gaps for early years;
+the app uses available annual observations across the last 70 years.
 """)
-
-**Notes:** Data is loaded from the World Bank API. Some indicators have gaps for early years; the app uses available annual observations across the last 70 years.
-
-
 # --- Countries and World Bank codes
 COUNTRIES = {"Argentina":"ARG","Chile":"CHL","Mexico":"MEX"}
 
