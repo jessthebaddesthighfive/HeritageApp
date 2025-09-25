@@ -85,11 +85,21 @@ def fetch_wb(country_code, indicator_code, years_back=70):
 
 def INDICATOR_UNIT(name):
     return INDICATORS.get(name, {}).get("unit", "")
-
+    
 def get_table_download_link(df, filename="data.csv"):
+    if df is None or not isinstance(df, pd.DataFrame):
+        st.error("No valid data to download!")
+        return None
     csv = df.to_csv(index=False).encode('utf-8')
     b64 = base64.b64encode(csv).decode()
-    return f"data:file/csv;base64,{b64}"
+    href = f'<a href="data:file/csv;base64,{b64}" download="{filename}">Download CSV</a>'
+    return href
+
+# Example usage
+if 'edited_df' in st.session_state and isinstance(st.session_state.edited_df, pd.DataFrame):
+    st.markdown(get_table_download_link(st.session_state.edited_df, "edited_data.csv"), unsafe_allow_html=True)
+else:
+    st.info("No data available to download.")
 
 # --- Fetch Data ---
 all_data = {}
