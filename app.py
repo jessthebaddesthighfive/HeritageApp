@@ -123,10 +123,16 @@ except AttributeError:
     edited = st.dataframe(base_table)
 
 # --- Save edited table back ---
-model_data = {}
-for country in countries_to_plot:
-    country_df = edited[["year", country]].dropna().rename(columns={country: "value"})
-    model_data[country] = country_df
+if isinstance(edited, pd.DataFrame):
+    model_data = {}
+    for country in countries_to_plot:
+        if country in edited.columns:
+            country_df = edited[["year", country]].dropna().rename(columns={country: "value"})
+            model_data[country] = country_df
+else:
+    st.warning("Edited table is not available. Using original data.")
+    model_data = all_data
+
 
 # --- Plotting ---
 st.subheader("Scatter plot + Polynomial fit")
