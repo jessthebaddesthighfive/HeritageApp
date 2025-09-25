@@ -176,5 +176,17 @@ for t in analysis_text:
 
 # --- Download data ---
 st.subheader("Download data")
-csv_link = get_table_download_link(edited, "edited_data.csv")
+
+# Ensure `edited` is a DataFrame
+if not isinstance(edited, pd.DataFrame):
+    # Try to extract the DataFrame from the experimental_data_editor object
+    try:
+        edited_df = edited.data  # in some Streamlit versions
+    except AttributeError:
+        edited_df = base_table  # fallback to the original table
+else:
+    edited_df = edited
+
+csv_link = get_table_download_link(edited_df, "edited_data.csv")
 st.markdown(f"[Download edited data as CSV]({csv_link})")
+
