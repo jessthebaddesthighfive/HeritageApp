@@ -28,7 +28,7 @@ Extrapolated future data can be shown with a dashed line. You can also generate 
 """)
 
 **Notes:** Data is loaded from the World Bank API. Some indicators have gaps for early years; the app uses available annual observations across the last 70 years.
-""")
+
 
 # --- Countries and World Bank codes
 COUNTRIES = {"Argentina":"ARG","Chile":"CHL","Mexico":"MEX"}
