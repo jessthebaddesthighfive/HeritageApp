@@ -1,20 +1,32 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-import requests
-from datetime import datetime
-import matplotlib.pyplot as plt
-from io import BytesIO
-import base64
 
 st.set_page_config(layout="wide", page_title="Latin Countries Regression Explorer")
 
+# App Title
 st.title("Regression & Function Analysis — Argentina, Chile, Mexico (70-year World Bank data)")
+
+# Your name at the top
 st.markdown("**Created by Amarachi Onwo**")
-This app fetches historical data (World Bank) for **Argentina (ARG)**, **Chile (CHL)**, and **Mexico (MEX)**,
-fits a polynomial regression (degree >= 3) and performs function analysis (extrema, monotonicity, fastest change, extrapolation, etc.).
-- Use the controls in the left sidebar to pick category, years and countries.
-- The raw data is shown in an editable table you can modify; the regression is computed from the table shown.
+
+# App description — safe ASCII, properly terminated triple quotes
+st.markdown("""
+This app fetches historical data from the World Bank for Argentina (ARG), Chile (CHL), and Mexico (MEX),
+fits a polynomial regression (degree >= 3), and performs function analysis. This includes:
+- Finding local maxima and minima,
+- Determining when the function is increasing or decreasing,
+- Identifying when the rate of change is fastest,
+- Allowing interpolation and extrapolation for future years.
+
+Use the controls in the left sidebar to pick:
+- The category of data (Population, Unemployment rate, Education, Life expectancy, etc.),
+- The countries to include in your analysis,
+- Polynomial degree for the regression,
+- How far back in years to analyze.
+
+The raw data is shown in an editable table. The regression model is plotted as a scatter plot with the fitted curve.
+Extrapolated future data can be shown with a dashed line. You can also generate printer-friendly reports.
+""")
+
 **Notes:** Data is loaded from the World Bank API. Some indicators have gaps for early years; the app uses available annual observations across the last 70 years.
 """)
 
