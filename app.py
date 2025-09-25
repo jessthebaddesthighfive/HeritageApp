@@ -120,19 +120,23 @@ try:
     edited = st.experimental_data_editor(base_table, num_rows="dynamic")
 except AttributeError:
     st.warning("Your Streamlit version is too old for `experimental_data_editor`. Displaying read-only table instead.")
-    edited = st.dataframe(base_table)
+    edited = base_table
 
-# --- Save edited table back ---
-if isinstance(edited, pd.DataFrame):
-    model_data = {}
-    for country in countries_to_plot:
-        if country in edited.columns:
-            country_df = edited[["year", country]].dropna().rename(columns={country: "value"})
-            model_data[country] = country_df
+# --- Ensure edited is a DataFrame for plotting and download ---
+if not isinstance(edited, pd.DataFrame):
+    try:
+        edited_df = edited.data  # in some Streamlit versions
+    except AttributeError:
+        edited_df = base_table
 else:
-    st.warning("Edited table is not available. Using original data.")
-    model_data = all_data
+    edited_df = edited
 
+# --- Prepare data for model ---
+model_data = {}
+for country in countries_to_plot:
+    if country in edited_df.columns:
+        country_df = edited_df[["year", country]].dropna().rename(columns={country: "value"})
+        model_data[country] = country_df
 
 # --- Plotting ---
 st.subheader("Scatter plot + Polynomial fit")
@@ -141,7 +145,7 @@ colors = {"Argentina":"tab:blue","Chile":"tab:green","Mexico":"tab:orange"}
 analysis_text = []
 
 for country in countries_to_plot:
-    df = model_data[country]
+    df = model_data.get(country, pd.DataFrame())
     if df.empty:
         continue
     x = df["year"].values
@@ -160,33 +164,4 @@ for country in countries_to_plot:
         ax.plot(x_future, y_future, linestyle='--', color=colors.get(country))
     else:
         ax.plot(x_plot, y_plot, linestyle='-', color=colors.get(country))
-    eq_terms = [f'({c:.4e})*t^{len(coeffs)-1-i}' for i,c in enumerate(coeffs)]
-    equation = ' + '.join(eq_terms)
-    analysis_text.append(f"Equation for {country} (t = years since {int(x.min())}): {equation}")
-
-ax.set_xlabel("Year")
-ax.set_ylabel(f"{selected_category} ({INDICATOR_UNIT(selected_category)})")
-ax.legend()
-st.pyplot(fig)
-
-# --- Display analysis ---
-st.subheader("Function analysis (automatic)")
-for t in analysis_text:
-    st.markdown(t)
-
-# --- Download data ---
-st.subheader("Download data")
-
-# Ensure `edited` is a DataFrame
-if not isinstance(edited, pd.DataFrame):
-    # Try to extract the DataFrame from the experimental_data_editor object
-    try:
-        edited_df = edited.data  # in some Streamlit versions
-    except AttributeError:
-        edited_df = base_table  # fallback to the original table
-else:
-    edited_df = edited
-
-csv_link = get_table_download_link(edited_df, "edited_data.csv")
-st.markdown(f"[Download edited data as CSV]({csv_link})")
-
+    eq_terms =
